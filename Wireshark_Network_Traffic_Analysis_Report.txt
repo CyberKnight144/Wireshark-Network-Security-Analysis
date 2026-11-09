@@ -1,0 +1,336 @@
+# SOC Network Traffic Analysis Report
+
+## 1. Investigation Summary
+
+A network traffic analysis was conducted using Wireshark to examine DNS communications, identify failed DNS lookups, and investigate potential indicators of suspicious network activity.
+
+The investigation was performed in a Windows 11 virtual machine using a saved packet capture file (DNS_Traffic_Analysis.pcapng).
+
+During the investigation, DNS queries and responses were analyzed to identify domain names, resolved IP addresses, DNS response codes, and originating devices.
+
+The analysis identified 1,117 DNS queries and 1,111 DNS responses, including 38 NXDOMAIN responses indicating unsuccessful domain name resolution.
+
+Two domains, wpad.lan and cs.iqzone.com, were examined to determine whether their DNS failures indicated potentially suspicious activity.
+
+Based on the evidence reviewed, no confirmed malicious DNS activity was identified. Further investigation would be necessary to determine whether any unusual DNS patterns represented a security threat.
+
+## 2. Tools Used
+
+**Wireshark**
+- Captured and analyzed network packets.
+- Applied display filters to examine DNS queries and responses.
+- Investigated DNS resolution failures using NXDOMAIN response codes.
+- Identified source and destination IP addresses.
+- Reviewed DNS traffic statistics to identify potential security concerns.
+
+**Windows 11 Virtual Machine**
+- Provided the environment for capturing and analyzing network traffic.
+- Used as the investigation workstation.
+
+**Windows Snipping Tool**
+- Captured screenshots of DNS packets, network statistics, and investigation findings.
+
+**Notepad**
+- Used to document the investigation, findings, and final security assessment.
+
+## 3. DNS Traffic Analysis
+
+**Objective:**
+Analyze DNS queries and responses to understand domain name resolution and identify potentially suspicious network activity.
+
+**Wireshark Display Filters Used:**
+- dns
+- dns.flags.response == 0
+- dns.flags.rcode == 3
+
+**DNS Investigation Results:**
+
+A DNS query for yahoo.com was identified and examined using Wireshark.
+
+The DNS server successfully resolved the domain and returned six IPv4 addresses:
+
+- 74.6.143.25
+- 74.6.231.21
+- 74.6.231.20
+- 74.6.143.26
+- 98.137.11.163
+- 98.137.11.164
+
+**DNS Response Details:**
+- Domain: yahoo.com
+- Query Type: A (IPv4)
+- Response Code: No error (0)
+- Answer Records: 6
+- DNS Response Time: 11.9178 milliseconds
+- Response Packet Number: 525817
+
+**Analysis:**
+
+The DNS response demonstrated successful domain name resolution. Multiple IPv4 addresses were returned for yahoo.com, which is common for large websites using distributed infrastructure.
+
+No suspicious behavior was identified in this individual DNS exchange.
+
+**Evidence:**
+DNS_Response_Analysis.png
+
+## 4. NXDOMAIN Investigation
+
+**Objective:**
+
+Investigate failed DNS lookups to identify unusual domain resolution activity and determine whether the observed behavior indicates a potential security threat.
+
+**Wireshark Display Filter Used:**
+
+dns.flags.rcode == 3
+
+**DNS Traffic Statistics:**
+
+- Total DNS Messages: 2,228
+- DNS Queries: 1,117
+- DNS Responses: 1,111
+- Successful DNS Responses (No error): 1,073
+- NXDOMAIN Responses: 38
+- NXDOMAIN Response Rate: 3.42%
+
+**Domain 1: wpad.lan**
+
+- Query Type: AAAA (IPv6)
+- DNS Response: NXDOMAIN
+- Response Code: No such name (3)
+- Answer Records: 0
+- Response Time: 2.4928 milliseconds
+
+Analysis:
+
+The wpad.lan domain is associated with Web Proxy Auto-Discovery Protocol (WPAD), which can be used by systems to locate network proxy configuration settings.
+
+The failed lookup may represent normal network behavior. Although WPAD can be relevant to certain network security attacks, this individual DNS failure does not establish malicious activity.
+
+**Domain 2: cs.iqzone.com**
+
+- Query Type: A (IPv4)
+- DNS Response: NXDOMAIN
+- Response Code: No such name (3)
+- Answer Records: 0
+- Response Time: 13.4854 milliseconds
+
+Analysis:
+
+The DNS server returned NXDOMAIN for cs.iqzone.com, indicating that the requested domain name could not be resolved.
+
+Additional information about the originating application, frequency of requests, and related network connections would be needed to determine whether the activity was suspicious.
+
+**Security Assessment:**
+
+The investigation identified 38 NXDOMAIN responses among 1,111 DNS responses.
+
+Although repeated DNS failures can sometimes indicate misconfigured software or malware-related domain lookups, the available evidence does not establish malicious activity.
+
+**Evidence:**
+
+- DNS_NXDOMAIN_Analysis.png
+- DNS_Traffic_Statistics.png
+
+## 4. NXDOMAIN Investigation
+
+**Objective:**
+
+Investigate failed DNS lookups to identify unusual domain resolution activity and determine whether the observed behavior indicates a potential security threat.
+
+**Wireshark Display Filter Used:**
+
+dns.flags.rcode == 3
+
+**DNS Traffic Statistics:**
+
+- Total DNS Messages: 2,228
+- DNS Queries: 1,117
+- DNS Responses: 1,111
+- Successful DNS Responses (No error): 1,073
+- NXDOMAIN Responses: 38
+- NXDOMAIN Response Rate: 3.42%
+
+**Domain 1: wpad.lan**
+
+- Query Type: AAAA (IPv6)
+- DNS Response: NXDOMAIN
+- Response Code: No such name (3)
+- Answer Records: 0
+- Response Time: 2.4928 milliseconds
+
+Analysis:
+
+The wpad.lan domain is associated with Web Proxy Auto-Discovery Protocol (WPAD), which can be used by systems to locate network proxy configuration settings.
+
+The failed lookup may represent normal network behavior. Although WPAD can be relevant to certain network security attacks, this individual DNS failure does not establish malicious activity.
+
+**Domain 2: cs.iqzone.com**
+
+- Query Type: A (IPv4)
+- DNS Response: NXDOMAIN
+- Response Code: No such name (3)
+- Answer Records: 0
+- Response Time: 13.4854 milliseconds
+
+Analysis:
+
+The DNS server returned NXDOMAIN for cs.iqzone.com, indicating that the requested domain name could not be resolved.
+
+Additional information about the originating application, frequency of requests, and related network connections would be needed to determine whether the activity was suspicious.
+
+**Security Assessment:**
+
+The investigation identified 38 NXDOMAIN responses among 1,111 DNS responses.
+
+Although repeated DNS failures can sometimes indicate misconfigured software or malware-related domain lookups, the available evidence does not establish malicious activity.
+
+**Evidence:**
+
+- DNS_NXDOMAIN_Analysis.png
+- DNS_Traffic_Statistics.png
+
+## 5. Source IP Analysis
+
+**Objective:**
+
+Identify the source and destination IP addresses associated with a failed DNS lookup and determine which device initiated the request.
+
+**Investigation Details:**
+
+Using Wireshark, an NXDOMAIN response for the domain wpad.lan was identified.
+
+The original DNS query was located by examining the associated request packet.
+
+**Packet Information:**
+
+- Original DNS Request Packet: 195640
+- DNS Response Packet: 195641
+- Requested Domain: wpad.lan
+- Query Type: AAAA (IPv6)
+- DNS Response Code: NXDOMAIN (3)
+
+**Source IP Address:**
+
+2603:900b:5540:1:70ac:391f:56e5:a9a9
+
+**Destination DNS Server:**
+
+2603:900b:5540:1::1
+
+**Analysis:**
+
+The source IPv6 address represents the device that initiated the DNS request for wpad.lan.
+
+The destination IPv6 address represents the DNS server that received the request.
+
+The DNS server returned an NXDOMAIN response, indicating that the requested domain name could not be resolved.
+
+The investigation demonstrated how Wireshark can be used to trace a failed DNS lookup to its originating IP address.
+
+**Security Assessment:**
+
+The observed DNS activity is consistent with a possible automatic proxy discovery attempt.
+
+No confirmed malicious activity was identified in this individual DNS exchange.
+
+Further endpoint investigation would be necessary to determine which application or process generated the request.
+
+**Evidence:**
+
+DNS_Source_IP_Analysis.png
+
+## 5. Source IP Analysis
+
+**Objective:**
+
+Identify the source and destination IP addresses associated with a failed DNS lookup and determine which device initiated the request.
+
+**Investigation Details:**
+
+Using Wireshark, an NXDOMAIN response for the domain wpad.lan was identified.
+
+The original DNS query was located by examining the associated request packet.
+
+**Packet Information:**
+
+- Original DNS Request Packet: 195640
+- DNS Response Packet: 195641
+- Requested Domain: wpad.lan
+- Query Type: AAAA (IPv6)
+- DNS Response Code: NXDOMAIN (3)
+
+**Source IP Address:**
+
+2603:900b:5540:1:70ac:391f:56e5:a9a9
+
+**Destination DNS Server:**
+
+2603:900b:5540:1::1
+
+**Analysis:**
+
+The source IPv6 address represents the device that initiated the DNS request for wpad.lan.
+
+The destination IPv6 address represents the DNS server that received the request.
+
+The DNS server returned an NXDOMAIN response, indicating that the requested domain name could not be resolved.
+
+The investigation demonstrated how Wireshark can be used to trace a failed DNS lookup to its originating IP address.
+
+**Security Assessment:**
+
+The observed DNS activity is consistent with a possible automatic proxy discovery attempt.
+
+No confirmed malicious activity was identified in this individual DNS exchange.
+
+Further endpoint investigation would be necessary to determine which application or process generated the request.
+
+**Evidence:**
+
+DNS_Source_IP_Analysis.png
+
+## 7. Final Assessment
+
+**Investigation Conclusion:**
+
+A network traffic security investigation was successfully conducted using Wireshark in a Windows 11 virtual machine.
+
+The investigation focused on analyzing DNS queries and responses, identifying failed domain lookups, examining DNS traffic statistics, and tracing network requests to their originating IP addresses.
+
+**Key Results:**
+
+- Analyzed 2,228 DNS messages, including 1,117 queries and 1,111 responses.
+- Identified 38 NXDOMAIN responses, representing approximately 3.42% of DNS responses.
+- Examined successful DNS resolution for yahoo.com.
+- Investigated failed DNS lookups involving wpad.lan and cs.iqzone.com.
+- Identified the source and destination IPv6 addresses associated with a failed DNS request.
+- Documented findings using Wireshark packet captures and screenshots.
+
+**Final Security Verdict:**
+
+No confirmed malicious activity was identified in the DNS traffic examined during this investigation.
+
+The observed NXDOMAIN responses may be associated with normal network behavior, application configuration issues, or unsuccessful domain resolution attempts.
+
+The available evidence was insufficient to classify these events as a confirmed security incident.
+
+**Recommended Actions:**
+
+Continue monitoring DNS activity for unusual request patterns, repeated failures involving unfamiliar domains, and connections to known malicious infrastructure.
+
+Correlate suspicious network activity with endpoint logs and threat intelligence before making an escalation decision.
+
+**Skills Demonstrated:**
+
+- Network packet capture and analysis
+- DNS protocol investigation
+- IPv4 and IPv6 traffic analysis
+- DNS error identification
+- Source and destination IP analysis
+- Security event triage
+- Evidence collection and documentation
+- SOC investigation reporting
+
+**Investigation Status:**
+
+Completed — No confirmed malicious DNS activity identified in the traffic examined.
