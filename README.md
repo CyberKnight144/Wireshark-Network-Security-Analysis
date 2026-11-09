@@ -288,6 +288,19 @@ Shows the original DNS request and the source and destination IPv6 addresses.
 
 ![Source IP Analysis](Screenshots/DNS_Source_IP_Analysis.png)
 
+### 5. Additional NXDOMAIN Analysis
+
+Additional Wireshark evidence showing failed DNS lookups and NXDOMAIN response details.
+
+![Additional NXDOMAIN Analysis](Screenshots/DNS_NXDOMAIN_Analysis2.png)
+
+### 6. Additional DNS Response Analysis
+
+Additional DNS response evidence captured during the investigation.
+
+![Additional DNS Response Analysis](Screenshots/DNS_Response_Analysis2.png)
+
+
 ## Investigation Report
 
 The complete investigation report documents the analysis methodology, DNS findings, security assessment, and final conclusions.
